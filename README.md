@@ -9,3 +9,5 @@ My class work from W24 for [BIMM143 at UC San Diego](https://bioboot.github.io/b
 - Class 5: [Data viz with ggplot2](https://github.com/6relyT6/bimm143/blob/main/CopyOfclass05/class05.pdf).
 
 - Class 6: [R functions and packages](https://github.com/6relyT6/bimm143/blob/main/CopyOfclass06/class06.pdf).
+
+- Class 7: [Intro to machine for bioinformatics](https://github.com/6relyT6/bimm143/blob/main/CopyOfclass07/class07.md).
