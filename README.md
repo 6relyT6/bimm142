@@ -4,7 +4,7 @@ My class work from W24 for [BIMM143 at UC San Diego](https://bioboot.github.io/b
 
 ## Contents
 
-- Class 4: [Data analysis with R](https://github.com/6relyT6/bimm143/tree/main/CopyOfclass04).
+- Class 4: [Data analysis with R](https://github.com/6relyT6/bimm143/blob/main/CopyOfclass04/class4.pdf).
 
 - Class 5: [Data viz with ggplot2]().
 
