@@ -1,0 +1,134 @@
+---
+title: "Class05: Data Vis with ggplot"
+author: "Tyler Sy (A16651122)"
+format: pdf
+---
+
+# Graphics systems in R
+
+There are many graphics systems in R for making plots and figures.
+
+We have already played a little with **"base R"** graphics and the `plot()` function.
+
+Today we will start learning about a popular graphics package called `ggplot2()`.
+
+This is an add on package - i.e. we need to install it. I install it (like I install any package) with the `install.packages()` function.
+
+```{r}
+plot(cars)
+```
+
+Before I can use the functions from a package I have to load up the package from my "library". We use the `library(ggplot2)` command to load it up.
+
+``` {r}
+#install.packages('ggplot2')
+library(ggplot2)
+ggplot(cars)
+```
+
+Every ggplot is made up of at least 3 things:
+- data (the numbers etc. that will go into your plot)
+- aes (how the columns of data map to the plot aesthetics)
+- geoms (how the plot actually looks, points, bars, lines, etc.)
+
+
+```{r}
+ggplot(cars) +
+  aes(x = speed, y = dist) +
+  geom_point()
+```
+
+For simple plots, ggplot is more verbose - it takes more code than base R plot.
+
+Add some more layers to our ggplot:
+
+```{r}
+ggplot(cars) +
+  aes(x = speed, y = dist) +
+  geom_point() +
+  geom_smooth(method = 'lm', level = 0) +
+  labs(title = "Stopping distance of old cars",
+       subtitle = "A silly example plot") +
+  theme_bw()
+```
+
+```{r}
+url <- "https://bioboot.github.io/bimm143_S20/class-material/up_down_expression.txt"
+genes <- read.delim(url)
+head(genes)
+nrow(genes)
+ncol(genes)
+table(genes$State)
+round(table(genes$State) / nrow(genes) * 100, 2)
+```
+
+```{r}
+ggplot(genes) +
+  aes(x = Condition1, y = Condition2) +
+  geom_point()
+```
+
+```{r}
+p <- ggplot(genes) + 
+    aes(x=Condition1, y=Condition2, col=State) +
+    geom_point() +
+    labs(title = "Gene Expression Changes Upon Drug Treatment")
+p
+p + scale_colour_manual( values=c("blue","gray","red") )
+
+```
+
+```{r}
+#install.packages('gapminder')
+#install.packages('dplyr')
+
+library(gapminder)
+library(dplyr)
+gapminder_2007 <- gapminder %>% filter(year==2007)
+```
+
+```{r}
+ggplot(gapminder_2007) +
+  aes(x = gdpPercap, y = lifeExp) +
+  geom_point(alpha = 0.5)
+```
+
+```{r}
+ggplot(gapminder_2007) + 
+  geom_point(aes(x = gdpPercap, y = lifeExp,
+                 size = pop), alpha=0.5) + 
+  scale_size_area(max_size = 10)
+```
+
+```{r}
+gapminder_1957 <- gapminder %>% filter(year==1957)
+ggplot(gapminder_1957) +
+  geom_point(aes(x = gdpPercap, y = lifeExp, color = continent, size = pop),
+             alpha = 0.7) + 
+  scale_size_area(max_size = 15)
+
+```
+
+```{r}
+gapminder_1957 <- gapminder %>% filter(year==1957 | year==2007)
+
+ggplot(gapminder_1957) + 
+  geom_point(aes(x = gdpPercap, y = lifeExp, color = continent, size = pop),
+             alpha = 0.7) + 
+  scale_size_area(max_size = 15) +
+  facet_wrap(~year)
+```
+
+```{r}
+gapminder_top5 <- gapminder %>% 
+  filter(year==2007) %>% 
+  arrange(desc(pop)) %>% 
+  top_n(5, pop)
+
+gapminder_top5
+```
+
+```{r}
+ggplot(gapminder_top5) + 
+  geom_col(aes(x = country, y = pop))
+```
