@@ -1,0 +1,210 @@
+---
+title: "Class 6: R Functions"
+author: "Tyler (A16651122)"
+date: 01/25/24
+format: pdf
+---
+
+## R Functions
+
+Functions are how we get stuff done. We call functions to do everything useful in R.
+
+One cool thing about R is that it makes writing your own functions comparatively easy.
+
+All functions in R have at least three things:
+
+-   A **name** (we get to pick this)
+-   One or more **input arguments** (the input to our function)
+-   The **body** (lines of code that do the work)
+
+Can use #\| eval: false to make an entire coding block not run
+
+```{r}
+#| eval: false
+
+funname <- function(input1, input2) {
+  The body with R code
+}
+```
+
+Let's write a silly first function to add two numbers:
+
+```{r}
+x <- 5
+y <- 1
+x + y
+```
+
+```{r}
+addme <- function(x, y=1) {
+  x + y
+}
+```
+
+```{r}
+addme(1,1)
+```
+
+```{r}
+addme(10)
+```
+
+## Lab for today
+
+Write a function to grade student work from class. Start with a simplified version of the problem:
+
+```{r}
+# Example input vectors to start with
+student1 <- c(100, 100, 100, 100, 100, 100, 100, 90)
+student2 <- c(100, NA, 90, 90, 90, 90, 97, 80)
+student3 <- c(90, NA, NA, NA, NA, NA, NA, NA)
+```
+
+Come back to this NA problem. But things worked for `student1`.
+
+We want to drop the lowest score before getting the `mean()`.
+
+How do I find the lowest (minimum) score?
+
+```{r}
+min(student1)
+```
+
+Found which.min().
+
+```{r}
+which.min(student1)
+```
+
+Cool - it is the 8th element of the vector that has the lowest score. Can I remove this one?
+
+```{r}
+# Find the lowest score
+ind <- which.min(student1)
+# remove lowest score and find the mean
+mean(student1[-ind])
+```
+
+```{r}
+mean(student1[-which.min(student1)])
+```
+
+Use a common shortcut and use `y` as my input
+
+```{r}
+y <- student2
+mean(y[-which.min(y)])
+```
+
+```{r}
+is.na(student3)
+sum(is.na(student3))
+```
+
+How can I remove the NA elements from the vector?
+
+```{r}
+z <- student1
+
+z[is.na(z)] <- 0
+mean( z[-which.min(z)])
+```
+
+Last step now that I have my working code snippets is to make my `grade()` function.
+
+```{r}
+grade <- function(x) {
+  x[is.na(x)] <- 0
+  mean(x[-which.min(x)], na.rm = TRUE)
+}
+```
+
+```{r}
+grade(student1)
+grade(student2)
+grade(student3)
+```
+
+`apply()` takes any function and applies it over a dataset.
+
+-   x = array
+-   margin = 1 (rows) or 2 (columns)
+-   fun = function
+
+Read the online gradebook (CSV file)
+
+```{r}
+gradebook <- read.csv("https://tinyurl.com/gradeinput", row.names = 1)
+
+head(gradebook)
+```
+
+## Lab Questions
+
+**Q1**
+
+```{r}
+grade <- function(x) {
+  # Sets all NA values equal to 0
+  x[is.na(x)] <- 0
+  # Removes the lowest value score, which includes 0, and averages the scores
+  mean(x[-which.min(x)], na.rm = TRUE)
+}
+```
+
+```{r}
+# uses grade function on gradebook dataset, but only on the rows
+results <- apply(gradebook, 1, grade)
+results
+```
+
+**Q2**
+
+```{r}
+max(results)
+which.max(results)
+```
+
+The top student is student-18.
+
+**Q3**
+
+```{r}
+# uses mean function on gradebook dataset but only on columns (hw assignments)
+hw <- apply(gradebook, 2, mean, na.rm = TRUE)
+hw
+```
+
+```{r}
+min(hw)
+which.min(hw)
+```
+
+Homework 3 was the toughest.
+
+**Q4**
+
+```{r}
+# make all (or mask) NA equal 0
+mask <- gradebook
+mask[is.na(mask)] <- 0
+#mask
+```
+
+We can use the `cor()` function for correlation analysis.
+
+```{r}
+# correlation for grade (after being masked) and each homework assignment
+cor(mask$hw1, results)
+cor(mask$hw2, results)
+cor(mask$hw3, results)
+cor(mask$hw4, results)
+cor(mask$hw5, results)
+```
+
+Need to use `apply()` function to run analysis over the whole masked gradebook.
+
+```{r}
+apply(mask, 2, cor, results)
+```
+
